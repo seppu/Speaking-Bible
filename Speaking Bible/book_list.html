@@ -1,0 +1,117 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Book List</title>
+    <script type="text/javascript" charset="utf-8" src="js/cordova-2.0.0.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/audio.js"></script>
+    <!-- Bootstrap includes starts here -->
+    <link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+	<!-- Font awesome starts here -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+        <!-- Ends Font awesome  -->
+	<!-- Ends Bootstrap  -->
+	<!-- Custom code starts here -->
+    <link href="css/style.css" rel="stylesheet">
+		<!-- Ends Custom code  -->
+		<script type="text/javascript" charset="utf-8">
+			function playSound(id){
+				var no = (id < 10 ? "0" : "") + id;
+				playAudio("/android_asset/www/sound/ENG/b"+no+".mp3");
+			}
+		    document.addEventListener("deviceready", onDeviceReady, false);
+		    // PhoneGap is ready
+
+		    function queryDB(tx) {
+		        tx.executeSql('SELECT * FROM BOOKS', [], querySuccess, errorCB);
+		    }
+
+		    // Query the success callback
+		    //
+		    function querySuccess(tx, results) {
+		        var len = results.rows.length;
+		        var html = '';
+		        for (var i=0; i<len; i++){
+		           html += '<div class="col-md-12 col-sm-4 col-xs-4 button-bg1 ad" id="b0'+results.rows.item(i).id+'" onclick="playSound('+results.rows.item(i).id+');"><h6>'+ results.rows.item(i).s_title +'</h6></div>';
+
+		        }
+		        $('.books-list').html(html);
+		    }
+
+		    // Transaction error callback
+		    //
+		    function errorCB(err) {
+		        alert("Error processing SQL: "+err.code);
+		    }
+
+		    function onDeviceReady() {
+		        var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
+		        db.transaction(queryDB, errorCB);
+		    }
+
+		</script>
+		<style>
+		.highlight{
+		background-color: #ff2;
+		}
+		</style>
+
+  </head>
+  <body >
+
+</head>
+
+
+<header>
+	<div class="menu-band">
+	    <h4>
+		<div class="col-md-6 pull-left"><i class="fa fa-bars"></i></div>LISTEN<div class="col-md-3 pull-right">
+		<i class="col-md-4 fa fa-home"></i>
+
+	    </h4>
+	</div>
+</header>
+<div class="container">
+
+
+	 <div class="sel-size "><!--Drop Downs start -->
+
+		    <select name="bookslist">
+				<option value="b01">Mat</option>
+				<option value="b02">Mar</option>
+				<option value="b03">Luk</option>
+				<option value="b04">Joh</option>
+			</select>
+			Ch
+			 <select>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+			</select>
+			Ver
+			 <select>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+			</select></center><!--Ends Drop Downs  -->
+			</div>
+    <div class="col-md-4 col-xs-12   col-md-offset-4 main-panel books-list">
+    <div class='col-md-12 col-sm-4 col-xs-4 button-bg1 ad' id='b01'><h6>MATT</h6></div>
+
+		</div>
+
+	</div>
+
+	<!--ENDS play-controls -->
+</div><!--ENDS Container-->
+
+
+</body>
+</html>

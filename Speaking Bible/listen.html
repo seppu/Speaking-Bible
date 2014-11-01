@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Listen</title>   
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" charset="utf-8" src="js/jquery-2.1.0.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- Bootstrap includes starts here -->
+    <script src="bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
+    <link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Ends Bootstrap  -->
+	<!-- Font awesome starts here -->
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <!-- Ends Font awesome  -->
+	
+	<!-- Custom code starts here -->
+    <link href="css/style.css" rel="stylesheet">
+	<!-- Ends Custom code  -->
+</head>
+<body >
+    <header>
+    	<div class="menu-band">
+    	    <h4>
+    		<div class="col-md-6 pull-left"><i class="fa fa-play"></i>LISTEN</div><div class="col-md-3 pull-right">
+    		<i class="col-md-4 fa fa-home"></i>
+    		<i class="col-md-4 fa fa-list"></i><i class="col-md-4 fa fa-calendar"></i></div>
+    	    </h4>
+    	</div>
+    </header>
+<div class="container">
+
+	<h2>John 1:1</h2>
+
+	<div class="col-md-12 verse-box" id="verse-box">
+		    <div class="pull-right study-toolbar"><i class="col-md-4 fa fa-microphone"></i>
+		    <i class="col-md-4 fa fa-bars"></i><i class="col-md-4 fa fa-files-o"></i>
+			</div><!--ENDS study-toolbar --><br><br>
+			In the beginning was the Word, and the Word was with God, and the Word was God
+
+	</div><!--ENDS verse-box -->
+
+    <div class="row col-md-12  col-md-offset-4 play-controls">
+
+		<div class="col-md-1 col-sm-1 col-xs-1 button-bg2"><i class=" fa fa-fast-backward"></i>
+		</div>
+
+		<div class="col-md-1 col-sm-1 col-xs-1 button-bg2"><i class=" fa fa-backward"></i>
+		</div>
+
+		<div class="col-md-1 col-sm-1 col-xs-1 button-bg2"><i class=" fa fa-play"></i>
+		</div>
+
+		<div class="col-md-1 col-sm-1 col-xs-1 button-bg2"><i class=" fa fa-forward"></i>
+		</div>
+
+		<div class="col-md-1 col-sm-1 col-xs-1 button-bg2"><i class=" fa fa-fast-forward"></i>
+		</div>
+	</div>
+
+
+	<!--ENDS play-controls -->
+</div><!--ENDS Container-->
+<footer>
+	&copy;Copy right
+</footer>
+<script type="text/javascript">
+    
+    $(document).ready(function() {  
+    //GET Variable
+    function getUrlParameter(sParam)
+    {
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++) 
+        {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam) 
+            {
+                return sParameterName[1];
+            }
+        }
+    }  
+    var bname = getUrlParameter('bname');
+    var bno = getUrlParameter('bno');
+    var cname = getUrlParameter('cname');
+    var verse = getUrlParameter('verse');
+    alert(bname);
+
+    //Ends GET Variable
+      
+      function getSelectedText() {
+            var txt = '';
+            if (window.getSelection) {
+                txt = window.getSelection();
+            } else if (document.getSelection) {
+                txt = document.getSelection();
+            } else if (document.selection) {
+                txt = document.selection.createRange().text;
+            }
+            return txt;
+        }
+        
+        function deselectText() {
+            if (window.getSelection) {
+                window.getSelection().removeAllRanges();
+            } else if (document.getSelection) {
+                txt = document.getSelection().removeAllRanges();
+            } else if (document.selection) {
+                txt = document.selection.empty;
+            }
+
+        }
+      
+      
+        $('#verse-box').dblclick(function() {
+            $('.highlight').removeClass('highlight');
+            var t = getSelectedText();
+    alert(t);
+    var aurl = 'http://translate.google.com/translate_tts?tl=en&q='+t;
+            var regex = new RegExp(t, "gi");
+            this.innerHTML = this.innerHTML.replace(regex, function(matched) {return "<span class=\"highlight \">" + matched + "</span>";});
+    //play audio
+           
+          var audioElement = document.createElement('audio');
+             audioElement.setAttribute('src', aurl);
+     alert(aurl)
+             audioElement.setAttribute('autoplay', 'autoplay');
+             audioElement.load()
+             $.get();
+             audioElement.addEventListener("load", function() {
+             audioElement.play();
+            }, true);
+            audioElement.play();
+
+         //END to play audio
+    //POST search string
+    $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: "LinkTagOut.aspx",
+            dataType: "json",
+            data: { string: 'id=$t' }, // or the string: 'id=1'
+            complete:
+            function () {
+                window.location = "LinkTagOut.aspx";
+            }
+
+    });
+    //ENDS POST search string
+            deselectText();
+        });
+        
+    });
+      </script>
+</body>
+</html>

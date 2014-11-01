@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Contact Example</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" charset="utf-8" src="js/cordova-2.0.0.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/db_functions.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+
+    // Query the database
+    //
+    function getChapter(tx) {
+        tx.executeSql('SELECT * FROM CHAPTERS where id = "1"', [], printChapter, errorCB);
+    }
+
+    function getVerses(tx,book_s_title,chapter_no){
+        tx.executeSql("SELECT * FROM VERSES where book_s_title ='"+book_s_title+"' and chapter_no = '"+chapter_no+"'", [], printVerses, errorCB);
+    }
+
+    function printVerses(tx, results){
+        var len = results.rows.length;
+        for (var i=0; i<len; i++){
+            $("#pollo").append("<p>"+results.rows.item(i).verse_no+" . " + results.rows.item(i).verse_text +"</p>");
+        }
+    }
+    // Query the success callback
+    //
+    function printChapter(tx, results) {
+        var len = results.rows.length;
+        var book_s_title;
+        for (var i=0; i<len; i++){
+            $("#pollo").append("<h4>" + results.rows.item(i).book_s_title +"</h4>");
+            $("#pollo").append("<br/>");
+            $("#pollo").append("<h4> Chapter" + results.rows.item(i).chapter_no +"</h4>");
+
+            $("#pollo").append("<audio controls><source src='http://cloud.faithcomesbyhearing.com/mp3audiobibles2/"+results.rows.item(i).url+"' type='audio/mpeg'></audio>");
+            $("#pollo").append("<br/>");
+        }
+        if (len > 0){
+            book_s_title = results.rows.item(0).book_s_title;
+            chapter_no = results.rows.item(0).chapter_no;
+            getVerses(tx,book_s_title,chapter_no);
+        }
+
+    }
+
+    // Transaction error callback
+    //
+    function errorCB(err) {
+        alert("Error processing SQL: "+err.code);
+    }
+
+
+    // PhoneGap is ready
+    //
+    function onDeviceReady() {
+        var db = window.openDatabase("Database", "1.0", "PhoneGap Demo1", 200000);
+        db.transaction(getChapter, errorCB);
+    }
+
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Example</h1>
+      <div class="well">
+        <p id="pollo">Play</p>
+        <audio controls>
+        <source src="http://cloud.faithcomesbyhearing.com/mp3audiobibles2/MJSNIVN2DA/B01___03_Matthew_____MJSNIVN2DA.mp3" type='audio/mpeg' />
+        </audio>
+      </div>
+    </div>
+
+  </body>
+</html>

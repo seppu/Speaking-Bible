@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" charset="utf-8" src="js/cordova-2.0.0.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/db_functions.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        document.addEventListener("deviceready", onDeviceReady, false);
+        // PhoneGap is ready
+
+        function queryDB(tx) {
+            tx.executeSql('SELECT * FROM BOOKS', [], querySuccess, errorCB);
+        }
+
+        // Query the success callback
+        //
+        function querySuccess(tx, results) {
+            var len = results.rows.length;
+            for (var i=0; i<len; i++){
+                $(".books_list").append("<h2>" + results.rows.item(i).title +"</h2>");
+            }
+        }
+
+        // Transaction error callback
+        //
+        function errorCB(err) {
+            alert("Error processing SQL: "+err.code);
+        }
+
+        function onDeviceReady() {
+            var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
+            db.transaction(queryDB, errorCB);
+        }
+
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Books List</h1>
+      <div class="well">
+        <div class="books_list">
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
