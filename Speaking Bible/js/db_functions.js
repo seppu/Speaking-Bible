@@ -1,7 +1,6 @@
 // create and Populate the database
 function populateDB(tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS BOOKS (id unique, s_title,title)');
-    tx.executeSql('DROP TABLE CHAPTERS');
     tx.executeSql('CREATE TABLE IF NOT EXISTS CHAPTERS (id unique,book_s_title,chapter_no,url)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS VERSES (order_no,book_s_title,verse_no,verse_start,chapter_text,verse_text,chapter_no,book,paragraph)');
 }
@@ -11,6 +10,7 @@ function createBooks(tx) {
 }
 
 function createChapters(tx) {
+    
     tx.executeSql('SELECT * FROM CHAPTERS', [], querySuccessChapters, errorCB);
 }
 
@@ -20,6 +20,7 @@ function createVerses(tx){
 
 function querySuccessVerses(tx, results) {
     var len = results.rows.length;
+    
     if (len == 0)
     {
         verseCreation(tx);
@@ -29,6 +30,7 @@ function querySuccessVerses(tx, results) {
 
 function querySuccessChapters(tx, results) {
     var len = results.rows.length;
+ 
     if (len == 0)
     {
         create_chapters(tx);
@@ -44,6 +46,7 @@ function querySuccessBooks(tx, results) {
 
         create_books(tx);
     }
+   // alert("books");
     createChapters(tx);
 }
 
@@ -56,6 +59,7 @@ function errorCB(err) {
 // Transaction success callback
 function successCB() {
     var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
+ 
     db.transaction(createBooks, errorCB);
     // alert("success");
 

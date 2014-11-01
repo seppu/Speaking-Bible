@@ -6,7 +6,7 @@
         function playAudio(src) {
             // Create Media object from src
             my_media = new Media(src, onSuccess, onError);
-
+            alert(my_mdeia);
             // Play audio
             my_media.play();
 
@@ -61,6 +61,7 @@
         // onError Callback
         //
         function onError(error) {
+            alert(error);
             alert('code: '    + error.code    + '\n' +
                   'message: ' + error.message + '\n');
         }

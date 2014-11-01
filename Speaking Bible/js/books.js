@@ -2,10 +2,10 @@ function create_books(tx){
   tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("Matt","Matthew","1")');
   tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("Mark","Mark","2")');
   tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("Luke","Luke","3")');
-  tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("John",""John",""4")');
-  tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("Acts",""Acts",""5")');
+  tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("John","John","4")');
+  tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("Acts","Acts","5")');
   tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("Rom","Romans","6")');
-  tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("1Cor",""1 Corinthians","7")');
+  tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("1Cor","1 Corinthians","7")');
   tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("2Cor","2 Corinthians","8")');
   tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("Gal","Galatians","9")');
   tx.executeSql('INSERT INTO BOOKS (s_title,title,id) VALUES("Eph","Ephesians","10")');
