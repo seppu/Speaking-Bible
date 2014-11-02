@@ -62,6 +62,8 @@ header {
 .item p{
 	color:#d5d5d5;
 	font-size:15px;
+    max-height: 50px;
+overflow: hidden;
 }
 .bible-links{
 text-align:center;
