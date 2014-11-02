@@ -7,8 +7,10 @@ function populateDB(tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS MEMVERSES (book_no, chapter_no, verse_no)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS RECORDINGS (book_no,chapter_no,verse_no, path)');
 }
+function createBooks(tx) {
+    tx.executeSql('SELECT * FROM BOOKS', [], querySuccessBooks, errorCB);
+}
 
------
 function createChapters(tx) {
     
     tx.executeSql('SELECT * FROM CHAPTERS', [], querySuccessChapters, errorCB);
