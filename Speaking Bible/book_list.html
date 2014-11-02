@@ -19,33 +19,18 @@
     <link href="css/style.css" rel="stylesheet">
     <!-- Ends Custom code  -->
     
-    <script>
-        $(document).ready(function() {
-                        $("#booksTitleList").on("change", function () {
-                    var title = this.value;
-                    console.log(title);
-                    alert(tx);
-                    getChapter(tx,title);
-                });
-                $("#chapter").change(function () {
-                    var title = $("#booksTitleList").value;
-                    var chapt = this.value;
-                    
-                    getVerse(tx,title,chapt);
-                });
-        });
-    </script>
+
     <script type="text/javascript" charset="utf-8">
         function populateChapter(){
            
           title = $("#booksTitleList").val();
-            alert(title);
+            //alert(title);
             var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
             db.transaction(getChapter, errorCB);
         }
         function populateVerse(){
             chapt = $("#chapter").val();
-            alert(title);
+            //alert(title);
             var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
             db.transaction(getVerse, errorCB);
         }
@@ -68,11 +53,11 @@
             tx.executeSql('SELECT * FROM BOOKS', [], querySuccess, errorCB);
         }
         function getChapter(tx) {
-            alert("pol");
+            //alert("pol");
             tx.executeSql('SELECT * FROM CHAPTERS where book_s_title = "'+ title +'"', [], printChapter, errorCB);
         }
         function getVerse(tx) {
-            alert(title);
+            //alert(title);
             tx.executeSql('SELECT * FROM VERSES where book_s_title = "'+ title +'" and chapter_no = "'+chapt+'"', [], printVerse, errorCB);
         }
          // Query the success callback
@@ -123,7 +108,7 @@
             db.transaction(queryDB, errorCB);
         }
         function build_link(){
-            $('.link').attr('href',"listen.html?book_s_title="+$("#booklist").val()+"&verse_no="+$("#verse").val()+"&chapter_no="+$("#chapter").val());
+            $('.link').attr('href',"listen.html?book_s_title="+$("#booksTitleList").val()+"&verse_no="+$("#verse").val()+"&chapter_no="+$("#chapter").val());
         }
     </script>
     <style>
