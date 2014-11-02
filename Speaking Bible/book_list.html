@@ -19,7 +19,37 @@
     <!-- Custom code starts here -->
     <link href="css/style.css" rel="stylesheet">
     <!-- Ends Custom code  -->
+    
+    <script>
+        $(document).ready(function() {
+                        $("#booksTitleList").on("change", function () {
+                    var title = this.value;
+                    console.log(title);
+                    alert(tx);
+                    getChapter(tx,title);
+                });
+                $("#chapter").change(function () {
+                    var title = $("#booksTitleList").value;
+                    var chapt = this.value;
+                    
+                    getVerse(tx,title,chapt);
+                });
+        });
+    </script>
     <script type="text/javascript" charset="utf-8">
+        function populateChapter(){
+           
+          title = $("#booksTitleList").val();
+            alert(title);
+            var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
+            db.transaction(getChapter, errorCB);
+        }
+        function populateVerse(){
+            chapt = $("#chapter").val();
+            alert(title);
+            var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
+            db.transaction(getVerse, errorCB);
+        }
         function playSound(id) {
             var no = (id < 10 ? "0" : "") + id;
             var audioElement = document.createElement('audio');
@@ -38,11 +68,13 @@
         function queryDB(tx) {
             tx.executeSql('SELECT * FROM BOOKS', [], querySuccess, errorCB);
         }
-        function getChapter(tx,title) {
+        function getChapter(tx) {
+            alert("pol");
             tx.executeSql('SELECT * FROM CHAPTERS where book_s_title = "'+ title +'"', [], printChapter, errorCB);
         }
-        function getVerse(tx,title,chapt) {
-            tx.executeSql('SELECT * FROM VERSES where book_s_title = "'+ title +'" and chapter_no = "'+chapter_no+'"', [], printVerse, errorCB);
+        function getVerse(tx) {
+            alert(title);
+            tx.executeSql('SELECT * FROM VERSES where book_s_title = "'+ title +'" and chapter_no = "'+chapt+'"', [], printVerse, errorCB);
         }
          // Query the success callback
          //
@@ -53,10 +85,10 @@
             for (var i = 0; i < len; i++) {
                 if (i < 10) {
                     html += '<div class="col-md-12 col-sm-4 col-xs-4 button-bg1 ad" id="b0' + results.rows.item(i).id + '" onclick="playSound(' + results.rows.item(i).id + ');"><h6>' + results.rows.item(i).s_title + '</h6></div>';
-                    books += '<option value="b0' + results.rows.item(i).id + '">' + results.rows.item(i).s_title + '</option>';
+                    books += '<option value="' + results.rows.item(i).s_title + '">' + results.rows.item(i).s_title + '</option>';
                 } else {
                     html += '<div class="col-md-12 col-sm-4 col-xs-4 button-bg1 ad" id="b' + results.rows.item(i).id + '" onclick="playSound(' + results.rows.item(i).id + ');"><h6>' + results.rows.item(i).s_title + '</h6></div>';
-                    books += '<option value="b' + results.rows.item(i).id + '">' + results.rows.item(i).s_title + '</option>';
+                    books += '<option value="' + results.rows.item(i).s_title + '">' + results.rows.item(i).s_title + '</option>';
                 }
             }
             $('.books-list').html(html);
@@ -66,30 +98,21 @@
 
         function printChapter(tx, results) {
             var chapters = '';
+            var len = results.rows.length;
             for (var i = 0; i < len; i++) {
-                 chapters += '<option >' + results.rows.item(i).chapter_no + '</option>';                
+                 chapters += '<option value="' + results.rows.item(i).chapter_no + '">' +results.rows.item(i).chapter_no + '</option>';                
             }
+            //alert(chapters);
             $('#chapter').html(chapters);
         }
         function printVerse(tx, results) {
             var verses = '';
-            for (var i = 0; i < len; i++) {
-                 verses += '<option >' + results.rows.item(i).verse_no + '</option>';                
+            for (var i = 0; i < results.rows.length; i++) {
+                 verses += '<option value="' + results.rows.item(i).verse_no + '">' + results.rows.item(i).verse_no + '</option>';                
             }
             $('#verse').html(verses);
         }
-        $("#booksTitleList").on("change", function () {
-            var title = this.value;
-            console.log(title);
-            alert(tx);
-            getChapter(tx,title);
-        });
-        $("#chapter").change(function () {
-            var title = $("#booksTitleList").value;
-            var chapt = this.value;
-            
-            getVerse(tx,title,chapt);
-        });
+
          // Transaction error callback
          //
         function errorCB(err) {
@@ -110,31 +133,31 @@
 
 <body>
     <header>
-        <div class="menu-band">
-            <h4>
-                <div class="col-md-6 pull-left">
-                    <i class="fa fa-bars">
-                    </i>
-                </div>
-                LISTEN
-                <div class="col-md-3 pull-right">
-                    <i class="col-md-4 fa fa-home">
-                    </i>
-                </div>
-            </h4>
+        <div class="logo">
+            <img src="logo.jpg" class="img-responsive" />
+        </div>
+        <div class="col-md-12 menu-band ">
+            <div class="col-md-6 pull-left">
+                <h1 class="ad" id="info">Book List</h1>
+            </div>
+            <div class="col-md-2 pull-right">
+                <a href="home.html" title="home"><i class="fa fa-home ad" id="home"></i></a>
+                <a href="book_list.html" title="home"><i class="fa fa-list ad" id="book_listing"></i></a>
+                <a href="alert.html" title="home"><i class="fa fa-calendar ad" id="alerts"></i></a>
+            </div>
         </div>
     </header>
     <div class="container">
         <div class="sel-size ">
             <!--Drop Downs start -->
-            <select name="bookslist" id="booksTitleList">
+            <select name="bookslist" id="booksTitleList" onChange="populateChapter();">
                 <!--<option value="b01">Mat</option>
 				<option value="b02">Mar</option>
 				<option value="b03">Luk</option>
                 <option value="b04">Joh</option>-->
             </select>
             Ch
-            <select id="chapter">
+            <select id="chapter" onChange="populateVerse();">
                 <!--<option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>

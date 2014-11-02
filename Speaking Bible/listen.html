@@ -47,12 +47,12 @@
 
         function printVerses(tx, results) {
             var len = results.rows.length;
-            tx.executeSql('SELECT * FROM VERSES where book_s_title ="' + book_s_title + '" and chapter_no = "' + chapter_no + '" and verse_no = "' + parseInt(verse_no)+1 + '"', [],
+            tx.executeSql('SELECT * FROM VERSES where book_s_title ="' + book_s_title + '" and chapter_no = "' + chapter_no + '" and verse_no = "' + parseInt(verse_no) + 1 + '"', [],
                 function (tx, res) {
                     for (var j = 0; j < res.rows.length; j++) {
                         endTime = res.rows.item(j);
                         alert(endTime);
-                    }//#t=" + results.rows.item(i).verse_start + "," + endTime + "
+                    } //#t=" + results.rows.item(i).verse_start + "," + endTime + "
                 }, errorCB);
             for (var i = 0; i < len; i++) {
 
@@ -108,12 +108,18 @@
 
 <body>
     <header>
-        <div class="menu-band">
-            <h4>
-    		<div class="col-md-6 pull-left"><i class="fa fa-play"></i>LISTEN</div><div class="col-md-3 pull-right">
-    		<i class="col-md-4 fa fa-home"></i>
-    		<i class="col-md-4 fa fa-list"></i><i class="col-md-4 fa fa-calendar"></i></div>
-    	    </h4>
+        <div class="logo">
+            <img src="logo.jpg" class="img-responsive" />
+        </div>
+        <div class="col-md-12 menu-band ">
+            <div class="col-md-6 pull-left">
+                <h1 class="ad" id="info">Listen</h1>
+            </div>
+            <div class="col-md-2 pull-right">
+                <a href="home.html" title="home"><i class="fa fa-home ad" id="home"></i></a>
+                <a href="book_list.html" title="home"><i class="fa fa-list ad" id="book_listing"></i></a>
+                <a href="alert.html" title="home"><i class="fa fa-calendar ad" id="alerts"></i></a>
+            </div>
         </div>
     </header>
     <div class="container">
