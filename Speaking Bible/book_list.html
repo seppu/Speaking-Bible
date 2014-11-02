@@ -122,6 +122,9 @@
             var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
             db.transaction(queryDB, errorCB);
         }
+        function build_link(){
+            $('.link').attr('href',"listen.html?book_s_title="+$("#booklist").val()+"&verse_no="+$("#verse").val()+"&chapter_no="+$("#chapter").val());
+        }
     </script>
     <style>
         .highlight {
@@ -184,7 +187,7 @@
             <div class="col-md-12 row play-controls1 col-md-offset-4">
                 <!--Not alligned -->
                 <div class="col-md-4 col-sm-4 col-xs-4 button-bg">
-                    <a href="listen.html?book_s_title=Matt&verse_no=1&chapter_no=1&bno=1">
+                    <a href="listen.html" class="link" onClick="build_link();">
                         <i class=" fa fa-play"></i>
                     </a>
                 </div>
