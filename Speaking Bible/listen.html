@@ -8,7 +8,7 @@
     <script type="text/javascript" charset="utf-8" src="js/jquery-2.1.0.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <!-- Bootstrap includes starts here -->
-     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script src="bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
     <link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Ends Bootstrap  -->
@@ -22,42 +22,56 @@
     <script type="text/javascript" charset="utf-8">
         document.addEventListener("deviceready", onDeviceReady, false);
 
-                               function getUrlParameter(sParam) {
-                var sPageURL = window.location.search.substring(1);
-                var sURLVariables = sPageURL.split('&');
-                for (var i = 0; i < sURLVariables.length; i++) {
-                    var sParameterName = sURLVariables[i].split('=');
-                    if (sParameterName[0] == sParam) {
-                        return sParameterName[1];
-                    }
+        function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) {
+                    return sParameterName[1];
                 }
             }
+        }
          // Query the database
          //
         function getChapter(tx) {
-            tx.executeSql("SELECT * FROM CHAPTERS where book_s_title ='" + book_s_title + "'  and chapter_no = '" + chapter_no + "'", [], printChapter, errorCB);
+            //alert("test");
+            //alert(book_s_title);
+            //alert('SELECT * FROM CHAPTERS where book_s_title ="' + book_s_title + '"  and chapter_no = "' + chapter_no + '"');
+            tx.executeSql('SELECT * FROM CHAPTERS where book_s_title ="' + book_s_title + '"  and chapter_no = "' + chapter_no + '"', [], printChapter, errorCB);
         }
 
         function getVerses(tx, book_s_title, chapter_no) {
-            tx.executeSql("SELECT * FROM VERSES where book_s_title ='" + book_s_title + "' and chapter_no = '" + chapter_no + "'", [], printVerses, errorCB);
+            tx.executeSql('SELECT * FROM VERSES where book_s_title ="' + book_s_title + '" and chapter_no = "' + chapter_no + '" and verse_no = "' + verse_no + '"', [], printVerses, errorCB);
         }
 
         function printVerses(tx, results) {
             var len = results.rows.length;
+            tx.executeSql('SELECT * FROM VERSES where book_s_title ="' + book_s_title + '" and chapter_no = "' + chapter_no + '" and verse_no = "' + parseInt(verse_no)+1 + '"', [],
+                function (tx, res) {
+                    for (var j = 0; j < res.rows.length; j++) {
+                        endTime = res.rows.item(j);
+                        alert(endTime);
+                    }//#t=" + results.rows.item(i).verse_start + "," + endTime + "
+                }, errorCB);
             for (var i = 0; i < len; i++) {
+
+                $("#chapTitle").append("<h4>" + results.rows.item(i).book + results.rows.item(i).paragraph + ":" + results.rows.item(i).verse_no + "</h4>");
+                $("#chapTitle").append("<br/>");
                 $("#verse-text").append("<p>" + results.rows.item(i).verse_no + " . " + results.rows.item(i).verse_text + "</p>");
+                $("#audioPlayer").append("<audio controls><source src='http://cloud.faithcomesbyhearing.com/mp3audiobibles2/" + audioUrl + "#t=" + results.rows.item(i).verse_start + "," + endTime + "' type='audio/mpeg'></audio>");
             }
         }
          // Query the success callback
          //
         function printChapter(tx, results) {
+            //alert("printCH");
             var len = results.rows.length;
             var book_s_title;
             for (var i = 0; i < len; i++) {
-                $("#chapTitle").append("<h4>" + results.rows.item(i).b_name + results.rows.item(i).c_name + ":" + results.rows.item(i).verse_no + "</h4>");
-                $("#chapTitle").append("<br/>");
+                //alert(results.rows.item(i).b_name);
                 //$("#pollo").append("<h4> Chapter" + results.rows.item(i).chapter_no + "</h4>");
-
+                audioUrl = results.rows.item(i).url;
                 //$("#pollo").append("<audio controls><source src='http://cloud.faithcomesbyhearing.com/mp3audiobibles2/" + results.rows.item(i).url + "' type='audio/mpeg'></audio>");
                 //$("#pollo").append("<br/>");
             }
@@ -80,11 +94,13 @@
          //
         function onDeviceReady() {
             var db = window.openDatabase("Database", "1.0", "PhoneGap Demo1", 200000);
-              bname = getUrlParameter('book_s_title');
-            alert(bname);
-             bno = getUrlParameter('bno');
-             cname = getUrlParameter('chapter_no');
-             verse = getUrlParameter('verse_no');
+            book_s_title = getUrlParameter('book_s_title');
+            //alert(book_s_title);
+            bno = getUrlParameter('bno');
+            chapter_no = getUrlParameter('chapter_no');
+            //alert(chapter_no);
+            verse_no = getUrlParameter('verse_no');
+            //alert(verse_no);
             db.transaction(getChapter, errorCB);
         }
     </script>
@@ -113,16 +129,18 @@
             </div>
         </div>
         <!--ENDS verse-box -->
-        <div class="row col-md-12  col-md-offset-4 play-controls">
-            <div class="col-md-1 col-sm-1 col-xs-1 button-bg2"><i class=" fa fa-fast-backward"></i>
+        <div class="row col-md-12  col-md-offset-4 play-controls" id="audioPlayer">
+        </div>
+        <div class="row col-md-12  col-md-offset-4 play-controls" style="display:none;">
+            <div class="col-md-1 col-sm-1 col-xs-1 button-bg1"><i class=" fa fa-fast-backward"></i>
             </div>
-            <div class="col-md-1 col-sm-1 col-xs-1 button-bg2"><i class=" fa fa-backward"></i>
+            <div class="col-md-1 col-sm-1 col-xs-1 button-bg1"><i class=" fa fa-backward"></i>
             </div>
-            <div class="col-md-1 col-sm-1 col-xs-1 button-bg2"><i class=" fa fa-play"></i>
+            <div class="col-md-1 col-sm-1 col-xs-1 button-bg1"><i class=" fa fa-play"></i>
             </div>
-            <div class="col-md-1 col-sm-1 col-xs-1 button-bg2"><i class=" fa fa-forward"></i>
+            <div class="col-md-1 col-sm-1 col-xs-1 button-bg1"><i class=" fa fa-forward"></i>
             </div>
-            <div class="col-md-1 col-sm-1 col-xs-1 button-bg2"><i class=" fa fa-fast-forward"></i>
+            <div class="col-md-1 col-sm-1 col-xs-1 button-bg1"><i class=" fa fa-fast-forward"></i>
             </div>
         </div>
         <!--ENDS play-controls -->
@@ -132,8 +150,6 @@
         &copy;Copy right
     </footer>
     <script type="text/javascript">
-        
-
         $(document).ready(function () {
             //GET Variable
 

@@ -1,125 +1,176 @@
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <title>Book List</title>
-      <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+    <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+     <script src="kendo/js/kendo.mobile.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/audio.js"></script>
     <!-- Bootstrap includes starts here -->
     <link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script type="text/javascript" charset="utf-8" src="js/jquery-2.1.0.min.js"></script>
-
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" charset="utf-8" src="js/jquery-2.1.0.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-	<!-- Font awesome starts here -->
+    <!-- Font awesome starts here -->
     <link href="css/font-awesome.min.css" rel="stylesheet">
-
-        <!-- Ends Font awesome  -->
-	<!-- Ends Bootstrap  -->
-	<!-- Custom code starts here -->
+    <!-- Ends Font awesome  -->
+    <!-- Ends Bootstrap  -->
+    <!-- Custom code starts here -->
     <link href="css/style.css" rel="stylesheet">
-		<!-- Ends Custom code  -->
-		<script type="text/javascript" charset="utf-8">
-			function playSound(id){
-				var no = (id < 10 ? "0" : "") + id;
-                var audioElement = document.createElement('audio');
-                audioElement.setAttribute('src', 'sound/ENG/b'+no+'.mp3');
-                audioElement.setAttribute('autoplay', 'autoplay');
-                //audioElement.load()
-                $.get();
-                audioElement.addEventListener("load", function() {
+    <!-- Ends Custom code  -->
+    <script type="text/javascript" charset="utf-8">
+        function playSound(id) {
+            var no = (id < 10 ? "0" : "") + id;
+            var audioElement = document.createElement('audio');
+            audioElement.setAttribute('src', 'sound/ENG/b' + no + '.mp3');
+            audioElement.setAttribute('autoplay', 'autoplay');
+            //audioElement.load()
+            $.get();
+            audioElement.addEventListener("load", function () {
                 audioElement.play();
-                }, true);
-                audioElement.play();
-			}
-		    document.addEventListener("deviceready", onDeviceReady, false);
-		    // PhoneGap is ready
+            }, true);
+            audioElement.play();
+        }
+        document.addEventListener("deviceready", onDeviceReady, false);
+         // PhoneGap is ready
 
-		    function queryDB(tx) {
-		        tx.executeSql('SELECT * FROM BOOKS', [], querySuccess, errorCB);
-		    }
+        function queryDB(tx) {
+            tx.executeSql('SELECT * FROM BOOKS', [], querySuccess, errorCB);
+        }
+        function getChapter(tx,title) {
+            tx.executeSql('SELECT * FROM CHAPTERS where book_s_title = "'+ title +'"', [], printChapter, errorCB);
+        }
+        function getVerse(tx,title,chapt) {
+            tx.executeSql('SELECT * FROM VERSES where book_s_title = "'+ title +'" and chapter_no = "'+chapter_no+'"', [], printVerse, errorCB);
+        }
+         // Query the success callback
+         //
+        function querySuccess(tx, results) {
+            var len = results.rows.length;
+            var html = '';
+            var books = '';
+            for (var i = 0; i < len; i++) {
+                if (i < 10) {
+                    html += '<div class="col-md-12 col-sm-4 col-xs-4 button-bg1 ad" id="b0' + results.rows.item(i).id + '" onclick="playSound(' + results.rows.item(i).id + ');"><h6>' + results.rows.item(i).s_title + '</h6></div>';
+                    books += '<option value="b0' + results.rows.item(i).id + '">' + results.rows.item(i).s_title + '</option>';
+                } else {
+                    html += '<div class="col-md-12 col-sm-4 col-xs-4 button-bg1 ad" id="b' + results.rows.item(i).id + '" onclick="playSound(' + results.rows.item(i).id + ');"><h6>' + results.rows.item(i).s_title + '</h6></div>';
+                    books += '<option value="b' + results.rows.item(i).id + '">' + results.rows.item(i).s_title + '</option>';
+                }
+            }
+            $('.books-list').html(html);
+            console.log(books);
+            $('#booksTitleList').html(books);
+        }
 
-		    // Query the success callback
-		    //
-		    function querySuccess(tx, results) {
-		        var len = results.rows.length;
-		        var html = '';
-		        for (var i=0; i<len; i++){
-		           html += '<div class="col-md-12 col-sm-4 col-xs-4 button-bg1 ad" id="b0'+results.rows.item(i).id+'" onclick="playSound('+results.rows.item(i).id+');"><h6>'+ results.rows.item(i).s_title +'</h6></div>';
+        function printChapter(tx, results) {
+            var chapters = '';
+            for (var i = 0; i < len; i++) {
+                 chapters += '<option >' + results.rows.item(i).chapter_no + '</option>';                
+            }
+            $('#chapter').html(chapters);
+        }
+        function printVerse(tx, results) {
+            var verses = '';
+            for (var i = 0; i < len; i++) {
+                 verses += '<option >' + results.rows.item(i).verse_no + '</option>';                
+            }
+            $('#verse').html(verses);
+        }
+        $("#booksTitleList").on("change", function () {
+            var title = this.value;
+            console.log(title);
+            alert(tx);
+            getChapter(tx,title);
+        });
+        $("#chapter").change(function () {
+            var title = $("#booksTitleList").value;
+            var chapt = this.value;
+            
+            getVerse(tx,title,chapt);
+        });
+         // Transaction error callback
+         //
+        function errorCB(err) {
+            alert("Error processing SQL: " + err.code);
+        }
 
-		        }
-		        $('.books-list').html(html);
-		    }
-
-		    // Transaction error callback
-		    //
-		    function errorCB(err) {
-		        alert("Error processing SQL: "+err.code);
-		    }
-
-		    function onDeviceReady() {
-		        var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
-		        db.transaction(queryDB, errorCB);
-		    }
-
-		</script>
-		<style>
-		.highlight{
-		background-color: #ff2;
-		}
-		</style>
-
-  </head>
-  <body >
-
+        function onDeviceReady() {
+            var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
+            db.transaction(queryDB, errorCB);
+        }
+    </script>
+    <style>
+        .highlight {
+            background-color: #ff2;
+        }
+    </style>
 </head>
 
-
-<header>
-	<div class="menu-band">
-	    <h4>
-		<div class="col-md-6 pull-left"><i class="fa fa-bars"></i></div>LISTEN<div class="col-md-3 pull-right">
-		<i class="col-md-4 fa fa-home"></i>
-
-	    </h4>
-	</div>
-</header>
-<div class="container">
-
-    
-	 <div class="sel-size "><!--Drop Downs start -->
-
-		    <select name="bookslist">
-				<option value="b01">Mat</option>
+<body>
+    <header>
+        <div class="menu-band">
+            <h4>
+                <div class="col-md-6 pull-left">
+                    <i class="fa fa-bars">
+                    </i>
+                </div>
+                LISTEN
+                <div class="col-md-3 pull-right">
+                    <i class="col-md-4 fa fa-home">
+                    </i>
+                </div>
+            </h4>
+        </div>
+    </header>
+    <div class="container">
+        <div class="sel-size ">
+            <!--Drop Downs start -->
+            <select name="bookslist" id="booksTitleList">
+                <!--<option value="b01">Mat</option>
 				<option value="b02">Mar</option>
 				<option value="b03">Luk</option>
-				<option value="b04">Joh</option>
-			</select>
-			Ch
-			 <select>
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-			</select>
-			Ver
-			 <select>
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-			</select></center><!--Ends Drop Downs  -->
-			</div>
-    <div class="col-md-4 col-xs-12   col-md-offset-4 main-panel books-list">
-    <div class='col-md-12 col-sm-4 col-xs-4 button-bg1 ad' id='b01'><h6>MATT</h6></div>
-
-		</div>
-
-	</div>
-
-	<!--ENDS play-controls -->
-</div><!--ENDS Container-->
-
-
+                <option value="b04">Joh</option>-->
+            </select>
+            Ch
+            <select id="chapter">
+                <!--<option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>-->
+            </select>
+            Ver
+            <select id="verse">
+                <!-- <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option> -->
+            </select>
+            <!--Ends Drop Downs  
+            <div class="col-md-1 col-sm-1 col-xs-1 button-bg1"><i class=" fa fa-play"></i>
+                <a href="listen.html?book_s_title=Matt&verse_no=1&chapter_no=1&bno=1">
+                </a>
+            </div>-->
+        </div>
+        <div class="col-md-4 col-xs-12   col-md-offset-4 main-panel books-list">
+            <div class='col-md-12 col-sm-4 col-xs-4 button-bg1 ad' id='b01'>
+                <h6>MATT</h6>
+            </div>
+        </div>
+        <center>
+            <div class="col-md-12 row play-controls1 col-md-offset-4">
+                <!--Not alligned -->
+                <div class="col-md-4 col-sm-4 col-xs-4 button-bg">
+                    <a href="listen.html?book_s_title=Matt&verse_no=1&chapter_no=1&bno=1">
+                        <i class=" fa fa-play"></i>
+                    </a>
+                </div>
+            </div>
+        </center>
+    </div>
+    <!--ENDS play-controls -->
+    <!--ENDS Container-->
 </body>
+
 </html>

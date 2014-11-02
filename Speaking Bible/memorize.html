@@ -30,22 +30,62 @@
 <header>
 	<div class="menu-band">
 	    <h4>
-		<div class="col-md-6 pull-left"><i class="fa fa-play"></i>Memorize</div><div class="col-md-3 pull-right">
-		<i class="col-md-4 fa fa-home"></i>
-		<i class="col-md-4 fa fa-list"></i><i class="col-md-4 fa fa-calendar"></i></div>
+		<div class="col-md-6 pull-left"><i class="fa fa-play ad" id="memory_list"></i>Memorize</div><div class="col-md-3 pull-right">
+		<i class="col-md-4 fa fa-home ad" id="home"></i>
+		<i class="col-md-4 fa fa-list ad" id="book_listing"></i>
+		<i class="col-md-4 fa fa-calendar ad" id="alerts"></i></div>
 	    </h4>
 	</div>
 </header>
 <div class="container">
-    
-	
-	
-	
-	<!--ENDS play-controls -->
+     
+	<div class="col-md-6 col-md-offset-4 memory-verse">
+		<h3>John 1:1</h3>
+		<p>In the beginning was the Word, and the Word was with God, and the Word was God</p>
+		<div class="col-md-12 col-sx-12 col-md-offset-6 memory-play"><h2>
+			<span><i class=" fa fa-play-circle-o  play-btn"></i></i></span>
+			<span><i class=" fa fa-smile-o smiley-btn"></i></i></span>
+			<span><i class=" fa fa-meh-o smiley-btn"></i></i></span></h2>
+		</div>
+	</div>
+
+		
+	<div class="col-md-6 col-md-offset-4 memory-verse">
+		<h3>John 1:1</h3>
+		<p>In the beginning was the Word, and the Word was with God, and the Word was God</p>
+		<div class="col-md-12 col-sx-12 col-md-offset-6 memory-play"><h2>
+			<span><i class=" fa fa-play-circle-o play-btn"></i></i></span>
+			<span><i class=" fa fa-smile-o smiley-btn"></i></i></span>
+			<span><i class=" fa fa-meh-o smiley-btn"></i></i></span></h2>
+		</div>
+	</div>
+	<div class="col-md-6 col-md-offset-4 memory-verse">
+		<h3>John 1:1</h3>
+		<p>In the beginning was the Word, and the Word was with God, and the Word was God</p>
+		<div class="col-md-12 col-sx-12 col-md-offset-6 memory-play"><h2>
+			<span><i class=" fa fa-play-circle-o play-btn"></i></i></span>
+			<span><i class=" fa fa-smile-o smiley-btn"></i></i></span>
+			<span><i class=" fa fa-meh-o smiley-btn"></i></i></span></h2>
+		</div>
+	</div>	<!--ENDS memory-verse -->
+	<div class="col-md-12 col-sx-12 col-md-offset-6">
+		<span>Result : <i id="result"></i></span>
+	</div>
 </div><!--ENDS Container-->
 <footer>
 	&copy;Copy right
 </footer>
-
+<script type="text/javascript">
+$(document).ready(function(){
+	var $n = 0;
+    $(".fa-smile-o").click(function(){
+    	alert("Wow!!!");
+        $n =$n+1;
+        alert($n);
+        //$n.val(Number($n.val())+1);
+        document.getElementById('result').text = $n;
+    }); 
+});
+</script>
 </body>
 </html>
